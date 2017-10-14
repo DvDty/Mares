@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div style="max-width: 500px; margin: auto">
+                <form method="post" name="authenticate">
+                    <div class="form-group">
+                        <label class="control-label required" for="user_email">Email</label>
+                        <input type="email" id="user_email" name="_username" required="required"
+                               class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label required" for="user_password">{{ 'authentication.login.1'|trans }}</label>
+                        <input type="password" id="user_password" name="_password" required="required"
+                               class="form-control"/>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn-primary btn">{{ 'authentication.login.2'|trans }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title_of_article"><strong>{{ article.title }}</strong></div>
+
+            {% if app.user and app.user.isAdmin() %}
+                <div>
+                    <a style="color: red;" href="{{ path('admin_article_edit', {id:article.id}) }}">Admin option: edit
+                        this article</a>
+                </div>
+
+                <div>
+                    <a style="color: red;" href="{{ path('admin_article_delete', {id:article.id}) }}">Admin option:
+                        delete this article</a>
+                </div>
+            {% endif %}
+
+            <div class="text_of_article">{{ article.content }}</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <img src="{{ asset(article.image) }}" class="img-responsive">
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>
+                {{ 'authentication.user.edit.form.8'|trans }}
+                (<a href="{{ path('authentication_profile_edit') }}">{{ 'authentication.user.edit.form.9'|trans }}</a>)
+            </h1>
+
+            <hr>
+
+            <h4>Email: {{ app.user.email }}</h4>
+            <h4>First name: {{ app.user.firstName }}</h4>
+            <h4>Last name: {{ app.user.lastName }}</h4>
+            <hr>
+
+            <h4>
+                Country:
+                {% if app.user.country %}
+                    {{ app.user.country }}
+                {% else %}
+                    Not added!
+                {% endif %}
+            </h4>
+
+            <h4>
+                City:
+                {% if app.user.city %}
+                    {{ app.user.city}}
+                {% else %}
+                    Not added!
+                {% endif %}
+            </h4>
+
+            <h4>
+                Zip:
+                {% if app.user.zip %}
+                    {{ app.user.zip }}
+                {% else %}
+                    Not added!
+                {% endif %}
+            </h4>
+
+            <h4>
+                Phone:
+                {% if app.user.phone %}
+                    {{ app.user.phone }}
+                {% else %}
+                    Not added!
+                {% endif %}
+            </h4>
+
+            <h4>
+                Address:
+                {% if app.user.address %}
+                    {{ app.user.address }}
+                {% else %}
+                    Not added!
+                {% endif %}
+            </h4>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,8 @@
+register.error.1: Невалиден email.
+register.error.2: Първото име е прекалено късо.
+register.error.3: Първото име е прекалено дълго.
+register.error.4: Фамилията е прекалено къса.
+register.error.5: Фамилията е прекалено дълга.
+register.error.6: Паролата е прекалено къса.
+register.error.7: Паролата е прекалено дълга.
+register.error.8: Паролите трябва да съвпадат.

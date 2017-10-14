@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            {% for color in colors %}
+                {% if color in product.colors %}
+                    {% set class = "colorsBox colorsBox_selected" %}
+                {% else %}
+                    {% set class = "colorsBox" %}
+                {% endif %}
+
+                <div class="{{ class }}" onclick="toggle_color(this)" value="{{ color.id }}">
+                    <div class="colorOfProductCircle" style="background-color: {{ color.hex }};"></div>
+                    {% if app.request.locale == "en" %}
+                        <div>{{ color.name }}</div>
+                    {% elseif app.request.locale == "bg" %}
+                        <div>{{ color.namebg }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div>
+                <a class="btn btn-primary btn-lg btn-block btn-custom" style="margin-top: 15px;"
+                   onclick="update_colors({{ product.id }})">
+                    Update colors
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/toggle_color.js') }}"></script>
+    <script src="{{ asset('js/update_colors.js') }}"></script>
+{% endblock %}
+

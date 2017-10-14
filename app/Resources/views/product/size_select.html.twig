@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            {% for size in sizes %}
+                {% if size in product.sizes %}
+                    {% set class = "size size-selected" %}
+                {% else %}
+                    {% set class = "size" %}
+                {% endif %}
+
+                <div class="{{ class }}" onclick="toggle_size(this)" value="{{ size.id }}">
+                    {{ size.name }}
+                </div>
+            {% endfor %}
+
+            <div>
+                <a class="btn btn-primary btn-lg btn-block btn-custom" style="margin-top: 15px;"
+                   onclick="update_sizes({{ product.id }})">
+                    Update sizes
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/toggle_size.js') }}"></script>
+    <script src="{{ asset('js/update_sizes.js') }}"></script>
+{% endblock %}
+

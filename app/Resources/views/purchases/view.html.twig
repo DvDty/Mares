@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>[{{ 'purchases.view.1'|trans }} #{{ cart.id }} - {{ cart.postedOn|date("d/m/Y - H:i") }}]</h2>
+            <h1>{{ 'purchases.view.2'|trans }}</h1>
+            <div>
+                <strong>Email - </strong>
+                {{ cart.owner.email }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.3'|trans }} - </strong>
+                {{ cart.owner.firstName }}
+                {{ cart.owner.lastName }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.4'|trans }} - </strong>
+                {% if cart.owner.address %}
+                    {{ cart.owner.address }},
+                {% endif %}
+
+                {% if cart.owner.city %}
+                    {{ cart.owner.city }},
+                {% endif %}
+
+                {% if cart.owner.zip %}
+                    {{ cart.owner.zip}},
+                {% endif %}
+
+                {% if cart.owner.country %}
+                    {{ cart.owner.country }}
+                {% endif %}
+
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.17'|trans }} - </strong>
+                {% if cart.owner.phone %}
+                    {{ cart.owner.phone }}
+                {% else %}
+                    Not added.
+                {% endif %}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.5'|trans }} - </strong>
+                {% if cart.owner.isPromo() %}
+                    <span style="color: green;">
+                        {{ 'purchases.view.6'|trans }}
+                        ({{ cart.owner.discount }}%)
+                    </span>
+                {% else %}
+                    <span style="color: red;">{{ 'purchases.view.7'|trans }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="col-md-12">
+            <h1>{{ 'purchases.view.8'|trans }}</h1>
+            <div>
+                <strong>{{ 'purchases.view.9'|trans }} - </strong>
+                {% set color = "" %}
+
+                {% if cart.status.id == 1 or cart.status.id == 2 or cart.status.id == 3 %}
+                    {% set color = "orangered" %}
+                {% else %}
+                    {% set color = "green" %}
+                {% endif %}
+
+                <span style="color: {{ color }};">
+                    {{ cart.status }}
+                </span>
+            </div>
+
+            <div style="max-width: 300px;">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.10'|trans }} - </strong>
+                <a href="{{ path('product_view', {id:cart.product.id }) }}">
+                    {{ cart.product.name }}
+                </a>
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.11'|trans }} - </strong>
+                <a href="{{ path('product_view_category', {id:cart.product.secondarycategory.id}) }}">
+                    {{ cart.product.secondarycategory.category }}
+                    > {{ cart.product.secondarycategory }}
+                </a>
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.12'|trans }} - </strong>
+                €{{ cart.product.price }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.13'|trans }} - </strong>
+                {{ cart.quantity }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.14'|trans }} - </strong>
+                €{{ cart.product.price * cart.quantity }}
+            </div>
+
+            <div>
+                <strong>{{ 'purchases.view.15'|trans }} - </strong>
+                {% if cart.owner.isPromo() %}
+                    {% set dis = cart.product.price / (100 / cart.owner.discount) %}
+                    €{{ cart.product.price / (100 / cart.owner.discount)  }} for each, €{{ dis * cart.quantity }} total
+
+                {% else %}
+                    {% set dis = 0 %}
+                    €0
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <div>
+                <strong>{{ 'purchases.view.16'|trans }} - </strong>
+                €{{ (cart.product.price * cart.quantity) - (dis * cart.quantity) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

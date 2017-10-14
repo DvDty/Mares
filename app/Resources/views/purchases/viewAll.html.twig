@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Name of product</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price for 1</th>
+                        <th>Discounted</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% set total = 0 %}
+                    {% for cart in carts %}
+                        <tr onclick="redirect({{ cart.id }})" style="cursor: pointer;" title="Click on a row to see details">
+                            <td>{{ cart.id }}</td>
+                            <td>{{ cart.owner.email }}</td>
+                            <td>
+                                {% set color = "" %}
+                                {% if cart.status.id == 1 or cart.status.id == 2 or cart.status.id == 3 %}
+                                    {% set color = "orangered" %}
+                                {% else %}
+                                    {% set color = "green" %}
+                                {% endif %}
+
+                                <span style="color: {{ color }};">
+                                        {{ cart.status }}
+                                </span>
+                            </td>
+                            <td>{{ cart.product.name }}</td>
+                            <td>{{ cart.color.name }}</td>
+                            <td>{{ cart.size.name }}</td>
+                            <td>{{ cart.quantity }}</td>
+                            <td>€{{ cart.product.price }}</td>
+                            <td>
+                                {% if cart.owner.isPromo() %}
+                                    <span style="color: green;">
+                                        Yes
+                                        ({{ cart.owner.discount }}%)
+                                    </span>
+                                {% else %}
+                                    <span style="color: red;">No</span>
+                                {% endif %}
+                            </td>
+                            {% set sum = cart.quantity * cart.product.price %}
+                            {% set total = total + sum %}
+                            <td>€{{ sum }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/linkTR.js') }}"></script>
+{% endblock %}

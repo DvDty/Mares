@@ -1,0 +1,8 @@
+register.error.1: Not a valid email.
+register.error.2: First name is too short.
+register.error.3: First name is too long.
+register.error.4: Last name is too short.
+register.error.5: Last name is too long.
+register.error.6: The password is too short.
+register.error.7: The password is too long.
+register.error.8: The passwords must match.

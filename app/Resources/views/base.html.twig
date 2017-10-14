@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}My sport{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link
+                rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+                integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+                crossorigin="anonymous">
+
+        <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous">
+        </script>
+
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-102224967-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top menu-1">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand myHide" href="{{ path("index") }}"
+               style="color: white !important;">{{ 'base.menu.7.1'|trans }}</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ path("index") }}" class="toLeft">{{ 'base.menu.1'|trans }}</a></li>
+                <li><a href="{{ path('product_view_all') }}">{{ 'base.menu.2'|trans }}</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.3'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        {% for brand in brands.brands %}
+                            <li><a href="{{ path('product_view_brand', {id:brand.id}) }}">{{ brand.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                {% if app.getUser() and app.getUser().isAdmin() %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            <span style="color: orangered;">
+                                {{ 'base.menu.4'|trans }}
+                                <span class="caret"></span>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('admin_purchases_view') }}">{{ 'base.menu.4.1'|trans }}</a></li>
+                            <li><a href="{{ path('admin_article_add') }}">{{ 'base.menu.4.2'|trans }}</a></li>
+                            <li><a href="{{ path('admin_product_add') }}">{{ 'base.menu.4.3'|trans }}</a></li>
+                            <li><a href="{{ path('admin_color_add') }}">{{ 'base.menu.4.4'|trans }}</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+
+            {#<form class="navbar-form navbar-left">#}
+            {#<div class="form-group">#}
+            {#<input type="text" class="form-control" placeholder="Search">#}
+            {#</div>#}
+            {#<button type="submit" class="btn btn-default">Submit</button>#}
+            {#</form>#}
+
+            <ul class="nav navbar-nav navbar-right">
+                {% if app.user %}
+                    <li><a href="{{ path("cart_view") }}">{{ 'base.menu.5.1'|trans }}</a></li>
+                    <li><a href="{{ path("authentication_profile_view") }}">{{ 'base.menu.5.2'|trans }}</a></li>
+                    <li><a href="{{ path("authentication_logout") }}">{{ 'base.menu.5.3'|trans }}</a></li>
+                {% else %}
+                    <li><a href="{{ path("authentication_login") }}">{{ 'base.menu.6.1'|trans }}</a></li>
+                    <li><a href="{{ path("authentication_register") }}">{{ 'base.menu.6.2'|trans }}</a></li>
+                {% endif %}
+
+                {#{% set currentPath = path(app.request.attributes.get('_route'),#}
+                {#app.request.attributes.get('_route_params')) %}#}
+
+                {% if app.request.locale == "bg" %}
+                    <li>
+                        <a href="{{ path('change_language', {language:'en'}) }}" class="flag_link">
+                            <img src="{{ asset('images/flags/flag-en.png') }}" alt="flag_en">
+                            <span class="myHide">Change the language</span>
+                        </a>
+                    </li>
+                {% elseif app.request.locale == "en" %}
+                    <li>
+                        <a href="{{ path('change_language', {language:'bg'}) }}" class="flag_link">
+                            <img src="{{ asset('images/flags/flag-bg.png') }}" alt="flag_bg">
+                            <span class="myHide">Смени езика</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar navbar-default navbar-static-top menu-2">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-2" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand myHide" href="{{ path("index") }}" style="color: white !important;">
+                {{ 'base.menu.7.2'|trans }}
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle toLeft main-a" data-toggle="dropdown" role="button"
+                       aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.1'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:1}) }}">{{ 'base.menu.categories.1.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:2}) }}">{{ 'base.menu.categories.1.2'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:3}) }}">{{ 'base.menu.categories.1.3'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:4}) }}">{{ 'base.menu.categories.1.4'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:5}) }}">{{ 'base.menu.categories.1.5'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:6}) }}">{{ 'base.menu.categories.1.6'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:7}) }}">{{ 'base.menu.categories.1.7'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:8}) }}">{{ 'base.menu.categories.1.8'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:9}) }}">{{ 'base.menu.categories.1.9'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:10}) }}">{{ 'base.menu.categories.1.10'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:11}) }}">{{ 'base.menu.categories.1.11'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:12}) }}">{{ 'base.menu.categories.1.12'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle main-a" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.2'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:13}) }}">{{ 'base.menu.categories.2.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:14}) }}">{{ 'base.menu.categories.2.2'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:15}) }}">{{ 'base.menu.categories.2.3'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:16}) }}">{{ 'base.menu.categories.2.4'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle main-a" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.3'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:17}) }}">{{ 'base.menu.categories.3.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:18}) }}">{{ 'base.menu.categories.3.2'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:19}) }}">{{ 'base.menu.categories.3.3'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:20}) }}">{{ 'base.menu.categories.3.4'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:21}) }}">{{ 'base.menu.categories.3.5'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle main-a" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.4'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:22}) }}">{{ 'base.menu.categories.4.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:23}) }}">{{ 'base.menu.categories.4.2'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:24}) }}">{{ 'base.menu.categories.4.3'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:25}) }}">{{ 'base.menu.categories.4.4'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:26}) }}">{{ 'base.menu.categories.4.5'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle main-a" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.5'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:27}) }}">{{ 'base.menu.categories.5.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:28}) }}">{{ 'base.menu.categories.5.2'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:29}) }}">{{ 'base.menu.categories.5.3'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:30}) }}">{{ 'base.menu.categories.5.4'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle main-a" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ 'base.menu.categories.6'|trans }}
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ path('product_view_category', {id:31}) }}">{{ 'base.menu.categories.6.1'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('product_view_category', {id:32}) }}">{{ 'base.menu.categories.6.2'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container body">
+    {% block body %}{% endblock %}
+</div>
+
+<footer>
+    <div>
+        <a href="{{ path('terms') }}">{{ 'footer.1'|trans }}</a>
+        <a href="{{ path('contact') }}">{{ 'footer.2'|trans }}</a>
+    </div>
+
+    <div>
+        <a href="{{ path('index') }}">© {{ "now"|date("Y") }} MYSPORT-BG.COM</a>
+    </div>
+</footer>
+
+{% block javascripts %}
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous">
+    </script>
+{% endblock %}
+</body>
+</html>

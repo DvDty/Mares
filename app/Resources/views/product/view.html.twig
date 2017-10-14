@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <img src="{{ asset(product.image) }}" class="img-responsive" style="border-radius: 2px;">
+        </div>
+
+        <div class="col-md-6 col-xs-12">
+            <strong><h1 class="product_title">{{ product.name }}</h1></strong>
+
+            <div class="myLabel">
+                {{ 'product.view.9'|trans }} -
+                {% if app.user and app.user.isPromo() %}
+                    <span style="color: red"><del>€{{ product.price }}</del></span>
+                    €{{ product.price / (100 / app.user.discount) }}
+                {% else %}
+                    €{{ product.price }}
+                {% endif %}
+            </div>
+
+            <div class="myLabel">
+                {{ 'product.view.1'|trans }}
+                <span id="show_error_color" style="color: red; display: none"> {{ 'product.view.2'|trans }}</span>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap;">
+                {% for color in product.colors %}
+                    <div class="colorsBox" onclick="select_color(this)" value="{{ color.id }}">
+                        <div class="colorOfProductCircle" style="background-color: {{ color.hex }};"></div>
+                        {% if app.request.locale == "en" %}
+                            <div>{{ color.name }}</div>
+                        {% elseif app.request.locale == "bg" %}
+                            <div>{{ color.namebg }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="myLabel">
+                {{ 'product.view.3'|trans }}
+                <span id="show_error_size" style="color: red; display: none"> {{ 'product.view.4'|trans }}</span>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap;">
+                {% for size in product.sizes %}
+                    <div class="size" onclick="select_size(this)" value="{{ size.id }}">
+                        {{ size.name }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="myLabel">
+                {{ 'product.view.5'|trans }}
+                <span id="show_error_quantity" style="color: red; display: none"> {{ 'product.view.6'|trans }}</span>
+            </div>
+
+            <div>
+                <form name="app_bundle_add_to_cart_type" method="post">
+                    <input type="hidden" id="app_bundle_add_to_cart_type_id" name="app_bundle_add_to_cart_type[id]"
+                           value="{{ product.id }}"/>
+                    <span class="p-quantity-modified">
+                        <i class="p-quantity-decrease" onclick="decrease_one()"
+                           style="background: url({{ asset('images/icons/plus_and_minus.png') }}) no-repeat -145px -90px;"></i>
+
+                        <input class="p-quantity-input" type="text" value="1" maxlength="3" autocomplete="off"
+                               id="app_bundle_add_to_cart_type_quantity"
+                               name="app_bundle_add_to_cart_type[quantity]" required="required"
+                               onchange="change_value(this.value)">
+
+                        <i class="p-quantity-increase" onclick="add_one()"
+                           style="background: url({{ asset('images/icons/plus_and_minus.png') }}) no-repeat -145px -45px;"></i>
+                    </span>
+
+                    <input type="hidden" id="app_bundle_add_to_cart_type_color"
+                           name="app_bundle_add_to_cart_type[color]"/>
+                    <input type="hidden" id="app_bundle_add_to_cart_type_size"
+                           name="app_bundle_add_to_cart_type[size]"/>
+                    <input type="hidden" id="app_bundle_add_to_cart_type__token"
+                           name="app_bundle_add_to_cart_type[_token]"
+                           value="{{ csrf_token("app_bundle_add_to_cart_type") }}"/>
+                </form>
+            </div>
+
+
+            {% if product.description %}
+                <div class="myLabel">
+                    {{ 'product.view.7'|trans }}
+                </div>
+
+                <div class="product_text">{{ product.description }}</div>
+            {% endif %}
+
+            <div style="margin-top: 15px">
+                {% if app.user %}
+                    <a class="btn btn-primary btn-lg btn-block btn-custom" onclick="add_to_cart()">
+                        {{ 'product.view.8'|trans }} >>
+                    </a>
+                {% else %}
+                    <a href="{{ path('authentication_login') }}" class="btn btn-primary btn-lg btn-block btn-custom">
+                        {{ 'product.view.8'|trans }} >>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if app.user and app.user.isAdmin() %}
+            <div class="col-md-12 col-xs-12">
+                <div>
+                    <a style="color: red;" href="{{ path('admin_product_edit', {id:product.id}) }}">
+                        Admin option: edit this product
+                    </a>
+                </div>
+
+                <div>
+                    <a style="color: red;" href="{{ path('admin_product_image_edit', {id:product.id}) }}">
+                        Admin option: edit image of this product
+                    </a>
+                </div>
+
+                <div>
+                    <a style="color: red;" href="{{ path('admin_product_color_select', {id:product.id}) }}">
+                        Admin option: update colors
+                    </a>
+                </div>
+
+                <div>
+                    <a style="color: red;" href="{{ path('admin_product_size_select', {id:product.id}) }}">
+                        Admin option: update sizes
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ asset('js/select_size.js') }}"></script>
+    <script src="{{ asset('js/select_color.js') }}"></script>
+    <script src="{{ asset('js/add_to_cart.js') }}"></script>
+    <script src="{{ asset('js/change_to_quantity.js') }}"></script>
+{% endblock %}
